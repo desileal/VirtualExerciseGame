@@ -17,7 +17,7 @@ public class StatScroller : MonoBehaviour
 
     private void OnEnable()
     {
-        scroll = XRInputAction.XRILeftInteraction.SelectValue;
+        scroll = XRInputAction.XRILeft.Scroll;
         scroll.Enable();
     }
 
@@ -35,10 +35,11 @@ public class StatScroller : MonoBehaviour
     {
         // Get input from VR controllers (e.g., thumbstick horizontal axis)
         float inputZ = scroll.ReadValue<Vector2>().y;
+        Debug.Log(inputZ);
         
         
         // Update visible position
-        transform.position += new Vector3(transform.position.x, transform.position.y, inputZ * scrollSpeed * Time.deltaTime);
+        transform.position += new Vector3(0f, 0f, inputZ * scrollSpeed * Time.deltaTime);
         
     }
 }
