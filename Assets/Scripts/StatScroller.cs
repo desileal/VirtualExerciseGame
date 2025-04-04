@@ -34,12 +34,12 @@ public class StatScroller : MonoBehaviour
     void Update()
     {
         // Get input from VR controllers (e.g., thumbstick horizontal axis)
-        float inputZ = scroll.ReadValue<Vector2>().y;
-        Debug.Log(inputZ);
+        float inputZ = scroll.ReadValue<Vector2>().x;
+        // Debug.Log(inputX);
         
         
         // Update visible position
-        transform.position += new Vector3(0f, 0f, inputZ * scrollSpeed * Time.deltaTime);
+        transform.position += new Vector3(0f, 0f, inputZ * scrollSpeed * Time.deltaTime );
         
     }
 }
