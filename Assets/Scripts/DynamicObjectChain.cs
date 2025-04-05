@@ -5,7 +5,6 @@ using TMPro;
 
 public class DynamicObjectChain : MonoBehaviour
 {
-    public GameObject tipObject;       // Reference to spawned tip
     public float boxScale = 0.25f;
     public Material horizontalBarMaterial;
     public Material verticalBarMaterial;
@@ -14,41 +13,32 @@ public class DynamicObjectChain : MonoBehaviour
     
     void Start()
     {
-        GenerateChain(5f, 3f, tipObject, true);
+        // GenerateChain(new Vector3(1f, 0f, 5f),5f, 3f, tipObject, true);
     }
 
-    public void GenerateChain(float zLength, float yHeight, GameObject tipObject, bool streak)
+    public GameObject GenerateChain(Vector3 position, float zLength, float yHeight, GameObject tipObject, bool streak, string dateText)
     {
         
         GameObject tick = CreateBox(
-            position: transform.position,
+            position: position,
             scale: new Vector3( 0.7f, .05f, 0.1f),
             name: "tick"
             );
         
         //Create Date Object
-        GameObject date = Instantiate(datePrefab, transform.position + new Vector3(0f, 0.05f, 0f), Quaternion.identity);
+        GameObject date = Instantiate(datePrefab, position + new Vector3(0f, 0.05f, 0f), Quaternion.identity);
         // date.GetComponent<TextMeshProUGUI>().text = "04/05/25";
+        date.transform.SetParent(tick.transform);
 
-        date.GetComponent<TextMeshPro>().text = "04/05/25";
+        date.GetComponent<TextMeshPro>().text = dateText;
         
-        
-        // // Get all components attached to this GameObject
-        // Component[] components = date.GetComponents<Component>();
-        //
-        // // Log each component's name and type
-        // foreach (Component component in components)
-        // {
-        //     Debug.Log($"Component: {component.GetType().Name} | GameObject: {gameObject.name}");
-        // }
-
-
         // Create first horizontal box
         GameObject horizontalBar = CreateBox(
-            position: transform.position + new Vector3(0f, 0f, zLength/2),
+            position: position + new Vector3(0f, 0f, zLength/2),
             scale: new Vector3(boxScale, boxScale,zLength),
             name: "HorizontalBar"
         );
+        horizontalBar.transform.SetParent(tick.transform);
         
         horizontalBar.GetComponent<Renderer>().material = horizontalBarMaterial;
 
@@ -66,7 +56,8 @@ public class DynamicObjectChain : MonoBehaviour
             name: "VerticalBar"
         );
         VerticalBar.GetComponent<Renderer>().material = verticalBarMaterial;
-
+        VerticalBar.transform.SetParent(tick.transform);
+        
         // Calculate tip position
         Vector3 tipPosition = horizontalBarEnd + 
                             Vector3.up * yHeight;
@@ -78,11 +69,15 @@ public class DynamicObjectChain : MonoBehaviour
             Quaternion.identity
         );
         tipObject.name = "ChainTip";
-
+        
+        tipObject.transform.SetParent(tick.transform);
         if (streak)
         {
-            Instantiate(streakIndicatorPreFab, tipPosition, Quaternion.identity);
+            GameObject srteakIndicator = Instantiate(streakIndicatorPreFab, tipPosition, Quaternion.identity);
+            srteakIndicator.transform.SetParent(tick.transform);
         }
+        
+        return tick;
     }
 
     GameObject CreateBox(Vector3 position, Vector3 scale, string name)
@@ -95,12 +90,6 @@ public class DynamicObjectChain : MonoBehaviour
         return box;
     }
 
-    // void DestroyGeneratedObjects()
-    // {
-    //     if (firstBox) Destroy(firstBox);
-    //     if (secondBox) Destroy(secondBox);
-    //     if (tipObject) Destroy(tipObject);
-    // }
 
 
 }
