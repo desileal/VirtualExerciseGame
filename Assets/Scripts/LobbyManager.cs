@@ -1,0 +1,90 @@
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System.Linq;
+using System;
+using UnityEngine.SceneManagement;
+
+public class LobbyManager : NetworkBehaviour
+{
+    public GameObject lobbyCanvas;
+    public Button startButton;
+    public Button endButton;
+    public TextMeshPro gameStatusText;
+    public TextMeshPro joinStatusText;
+
+    private bool gameStarted = false;
+
+    private void Start()
+    {
+        // Show lobby UI only at start
+        lobbyCanvas.SetActive(true);
+
+        // show join status
+        joinStatusText.text = NetworkManager.Singleton.IsHost ? "You are the Host" : "You are a Client";
+
+        // Show start button only if host
+        startButton.gameObject.SetActive(NetworkManager.Singleton.IsHost);
+        startButton.onClick.AddListener(StartGame);
+
+        // Optional quit logic
+        endButton.onClick.AddListener(QuitGame);
+
+        gameStatusText.text = "Waiting for Host to Start...";
+    }
+
+    // TODO 
+    // Call EndGameClientRpc() to show LobbyCanvas with final message
+    // Show the QuitButton
+    // When clicked, it runs QuitGame() as above
+    [ClientRpc]
+    public void EndGameClientRpc()
+    {
+        lobbyCanvas.SetActive(true);
+        gameStatusText.text = "Game Over – Great work!";
+        startButton.gameObject.SetActive(false);
+        endButton.gameObject.SetActive(true);
+    }
+
+    private void QuitGame()
+    {
+        if (NetworkManager.Singleton.IsHost)
+        {
+            // Host loads scene for everyone
+            NetworkManager.Singleton.SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
+        }
+        else
+        {
+            // Client disconnects and loads locally
+            NetworkManager.Singleton.Shutdown();
+            SceneManager.LoadScene("StartScene");
+        }
+    }
+
+    public void StartGame()
+    {
+        if (NetworkManager.Singleton.IsHost && !gameStarted)
+        {
+            gameStarted = true;
+            gameStatusText.text = "Starting game...";
+            StartGameClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void StartGameClientRpc()
+    {
+        lobbyCanvas.SetActive(false); // hide lobby UI for players
+        gameStarted = true;
+
+        foreach (var player in FindObjectsByType<NetworkPlayer>(FindObjectsSortMode.None))
+        {
+            if (player.IsOwner)
+            {
+                player.StartGameTimer();
+                player.spawnPointManager.StartSpawning(player);
+            }
+        }
+    }
+}
