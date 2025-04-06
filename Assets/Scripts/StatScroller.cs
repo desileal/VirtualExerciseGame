@@ -28,7 +28,7 @@ public class StatScroller : MonoBehaviour
     {
         // Get input from VR controllers (e.g., thumbstick horizontal axis)
         float inputX = scroll.ReadValue<Vector2>().x;
-        Debug.Log(inputX);
+        // Debug.Log(inputX);
         
         
         // Update visible position

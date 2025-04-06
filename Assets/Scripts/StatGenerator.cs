@@ -2,15 +2,6 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 
-[System.Serializable]
-public struct LogEntry
-{
-    [SerializeField] public float activePoints;
-    [SerializeField] public float activeTime;
-    [SerializeField] public bool streak;
-    [SerializeField] public float caloriesBurnt;
-    [SerializeField] public string date;
-}
 public class StatGenerator : MonoBehaviour
 {
     [SerializeField] private Vector3 initialLocation;
@@ -22,7 +13,6 @@ public class StatGenerator : MonoBehaviour
 
     private Vector3 _currentSpawnPosition;
     
-
     private void Start()
     {
         _currentSpawnPosition = initialLocation;

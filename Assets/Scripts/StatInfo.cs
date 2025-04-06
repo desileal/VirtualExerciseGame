@@ -16,6 +16,7 @@ public class StatInfo : MonoBehaviour
     {
         System.TimeSpan timeSpan = System.TimeSpan.FromMinutes(entryDetails.activeTime);
         string formattedTime = $"{timeSpan.Hours:00}:{timeSpan.Minutes:00}:{timeSpan.Seconds:00}";
+        // Debug.Log($" Icon raw time: {entryDetails.activeTime}, Icon time: {formattedTime}");
 
         infoText.text = 
             $"{entryDetails.date}" +

@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 using TMPro;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class DynamicObjectChain : MonoBehaviour
 {
@@ -10,11 +12,8 @@ public class DynamicObjectChain : MonoBehaviour
     public Material verticalBarMaterial;
     public GameObject datePrefab;
     public GameObject streakIndicatorPreFab;
+    public GameObject barDetailsPrefab;
     
-    void Start()
-    {
-        // GenerateChain(new Vector3(1f, 0f, 5f),5f, 3f, tipObject, true);
-    }
 
     public GameObject GenerateChain(Vector3 position, float length, float height, GameObject tipObject, bool streak, string dateText)
     {
@@ -44,6 +43,12 @@ public class DynamicObjectChain : MonoBehaviour
         
         horizontalBar.GetComponent<Renderer>().material = horizontalBarMaterial;
 
+        HoverInfoBox horizontalIfoScript = horizontalBar.AddComponent<HoverInfoBox>();
+        horizontalIfoScript.boxInfo = $"Action Points: {length * 10}";
+        horizontalIfoScript.tooltipPrefab = barDetailsPrefab;
+        
+
+
         // Calculate end position of first box
         Vector3 horizontalBarEnd = horizontalBar.transform.position + 
                             new Vector3(0f, 0f, zLength/2);
@@ -58,6 +63,14 @@ public class DynamicObjectChain : MonoBehaviour
         );
         VerticalBar.GetComponent<Renderer>().material = verticalBarMaterial;
         VerticalBar.transform.SetParent(tick.transform);
+        
+        System.TimeSpan timeSpan = System.TimeSpan.FromMinutes(height * 10f);
+        string formattedTime = $"{timeSpan.Hours:00}:{timeSpan.Minutes:00}:{timeSpan.Seconds:00}";
+        // Debug.Log($" Icon bar time: {length}, bar time: {formattedTime}");
+        
+        HoverInfoBox verticalInfoScript = VerticalBar.AddComponent<HoverInfoBox>();
+        verticalInfoScript.boxInfo = $"Active Time: {formattedTime}";
+        verticalInfoScript.tooltipPrefab = barDetailsPrefab;
         
         // Calculate tip position
         Vector3 tipPosition = horizontalBarEnd + 
@@ -81,6 +94,7 @@ public class DynamicObjectChain : MonoBehaviour
         return tick;
     }
 
+    
     GameObject CreateBox(Vector3 position, Vector3 scale, string name)
     {
         GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube);
