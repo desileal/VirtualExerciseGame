@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.87375396, g: 0.9536469, b: 0.990566, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.02
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -2276,6 +2276,8 @@ MonoBehaviour:
   datePrefab: {fileID: 3951127496328309942, guid: 95654cef9d4697b488d4b3b52007f5bd,
     type: 3}
   streakIndicatorPreFab: {fileID: 96773521175578719, guid: 6cbf24d03df297a44b149e86a0724a65,
+    type: 3}
+  barDetailsPrefab: {fileID: 8182477530288786109, guid: 988f3e87b5bb14c4496d10a9f5f465ce,
     type: 3}
 --- !u!4 &1103138246
 Transform:
