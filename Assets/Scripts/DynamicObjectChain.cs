@@ -16,8 +16,10 @@ public class DynamicObjectChain : MonoBehaviour
         // GenerateChain(new Vector3(1f, 0f, 5f),5f, 3f, tipObject, true);
     }
 
-    public GameObject GenerateChain(Vector3 position, float zLength, float yHeight, GameObject tipObject, bool streak, string dateText)
+    public GameObject GenerateChain(Vector3 position, float length, float height, GameObject tipObject, bool streak, string dateText)
     {
+        float zLength = length * 0.25f;
+        float yHeight = height * 0.25f;
         
         GameObject tick = CreateBox(
             position: position,
@@ -46,7 +48,6 @@ public class DynamicObjectChain : MonoBehaviour
         Vector3 horizontalBarEnd = horizontalBar.transform.position + 
                             new Vector3(0f, 0f, zLength/2);
         
-        Debug.Log(horizontalBarEnd);
 
 
         // Create second vertical box
@@ -65,7 +66,7 @@ public class DynamicObjectChain : MonoBehaviour
 
         tipObject = Instantiate(
             tipObject, // Use first prefab in list
-            tipPosition,
+            tipPosition + new Vector3(0f, 0.4f, 0f),
             Quaternion.identity
         );
         tipObject.name = "ChainTip";

@@ -18,6 +18,7 @@ public class StatGenerator : MonoBehaviour
     [SerializeField] private GameObject[] caloriesIcons;
     [SerializeField] private DynamicObjectChain entryBuilder;
     [SerializeField] private float distanceBetweenEntries;
+    [SerializeField] private string[] iconDescription;
 
     private Vector3 _currentSpawnPosition;
     
@@ -30,6 +31,8 @@ public class StatGenerator : MonoBehaviour
         {
             GameObject calorieIcon = GetCaloriesIcon(entry);
             calorieIcon.GetComponent<StatInfo>().entryDetails = entry;
+            calorieIcon.GetComponent<StatInfo>().UpdateIconInfo(GetCaloriesInfo(entry));
+            calorieIcon.GetComponent<StatInfo>().UpdatePanelInfo();
             GameObject chain =  entryBuilder.GenerateChain(_currentSpawnPosition, entry.activePoints/10f,
                 entry.activeTime/10f, calorieIcon, entry.streak, entry.date);
             chain.transform.parent = transform;
@@ -44,4 +47,13 @@ public class StatGenerator : MonoBehaviour
 
         return caloriesIcons[index];
     }
+    
+    private string GetCaloriesInfo(LogEntry entry)
+    {
+        int index = Mathf.FloorToInt(entry.caloriesBurnt / 50f);
+        index = Mathf.Clamp(index, 0, iconDescription.Length - 1);
+
+        return iconDescription[index];
+    }
+    
 }

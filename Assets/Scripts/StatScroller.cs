@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.XR.Interaction.Toolkit;
 
 public class StatScroller : MonoBehaviour
 {
@@ -26,20 +24,15 @@ public class StatScroller : MonoBehaviour
         scroll.Disable();
     }
 
-    void Start()
-    {
-
-    }
-
     void Update()
     {
         // Get input from VR controllers (e.g., thumbstick horizontal axis)
-        float inputZ = scroll.ReadValue<Vector2>().x;
-        // Debug.Log(inputX);
+        float inputX = scroll.ReadValue<Vector2>().x;
+        Debug.Log(inputX);
         
         
         // Update visible position
-        transform.position += new Vector3(0f, 0f, inputZ * scrollSpeed * Time.deltaTime );
+        transform.position += new Vector3(inputX * scrollSpeed * Time.deltaTime, 0f, 0f);
         
     }
 }
