@@ -28,14 +28,14 @@ public class Orb: NetworkBehaviour
 
     private void Update()
     {
-        if (!hasBeenHit && Time.time - spawnTime >= maxHitTime)
+/*        if (!hasBeenHit && Time.time - spawnTime >= maxHitTime)
         {
             if (IsServer && ownerPlayer != null)
             {
                 ownerPlayer.ResetStreak();
             }
             Destroy(gameObject);
-        }
+        }*/
     }
 
     public void Initialize()
@@ -48,13 +48,16 @@ public class Orb: NetworkBehaviour
         
         if (direction == OrbDirection.Right && other.CompareTag("VRControllerRight") || direction == OrbDirection.Left && other.CompareTag("VRControllerLeft"))
         {
+            Debug.Log("hit");
             hasBeenHit = true;
 
             NetworkPlayer player = other.GetComponentInParent<NetworkPlayer>();
-            if (player == ownerPlayer)
+            HandleHit(player);
+            /*if (player == ownerPlayer)
             {
+                Debug.Log("Owner");
                 HandleHit(player);                
-            }
+            }*/
         }
         
     }

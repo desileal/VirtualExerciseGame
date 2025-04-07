@@ -1,0 +1,1 @@
+C:\Users\desir\Unity\Exercise_SinglePlayer\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\build\intermediates\cxx\RelWithDebInfo\275o564p\obj\arm64-v8a

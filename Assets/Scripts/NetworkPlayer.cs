@@ -22,7 +22,9 @@ public class NetworkPlayer : NetworkBehaviour
     public TextMeshPro streakText;
     public TextMeshPro timerText;
 
-    [HideInInspector] public SpawnPointManager spawnPointManager;
+    public SpawnPointManager spawnPointManager;
+
+
 
     private float elapsedTime = 0f;
     private bool isTimerRunning = true;
@@ -76,11 +78,12 @@ public class NetworkPlayer : NetworkBehaviour
             if (rig != null) rig.gameObject.SetActive(false);
             return;
 
-            return;
+         
         }
 
         if (IsOwner)
         {
+            Debug.Log("Is Owner");
             // var lobbyCam = GameObject.Find("LobbyCamera");
             // if (lobbyCam != null)
             // {
@@ -88,24 +91,52 @@ public class NetworkPlayer : NetworkBehaviour
             // }
             
             var xrOrigin = GetComponentInChildren<XROrigin>();
-            if (xrOrigin != null) xrOrigin.gameObject.SetActive(true);
-            
+            // Ahmad - this snaps the XR origin to the exercise mat spawning the user into place
+            if (xrOrigin != null)
+            {
+                Transform matAnchor = null;
+
+                if (IsHost)
+                {
+                    matAnchor = GameObject.Find("ExerciseMat_Host")?.transform;
+                }
+                else
+                {
+                    matAnchor = GameObject.Find("ExerciseMat_Client")?.transform;
+                }
+
+                if (matAnchor != null)
+                {
+                    xrOrigin.transform.position = matAnchor.position;
+                    xrOrigin.transform.rotation = matAnchor.rotation;
+
+                    // Optional: align camera rig to floor
+                    xrOrigin.MoveCameraToWorldLocation(matAnchor.position);
+
+                    Debug.Log($"[NetworkPlayer] XR Origin aligned to: {matAnchor.name} at {matAnchor.position}");
+                }
+                else
+                {
+                    Debug.LogWarning("[NetworkPlayer] Could not find exercise mat anchor.");
+                }
+            }
+
             Score.OnValueChanged += UpdateScoreUI;
             HeartRate.OnValueChanged += UpdateHeartRateUI;
             Calories.OnValueChanged += UpdateCaloriesUI;
             Streak.OnValueChanged += UpdateStreakUI;
 
             string spawnerName = IsHost ? "SpawnPointManager_Host" : "SpawnPointManager_Client";
-            spawnPointManager = GameObject.Find(spawnerName)?.GetComponent<SpawnPointManager>();
+            //spawnPointManager = GameObject.Find(spawnerName)?.GetComponent<SpawnPointManager>();
 
-            if (spawnPointManager != null)
-            {
-                spawnPointManager.StartSpawning(this); // Kick off orb spawning
-            }
-            else
-            {
-                Debug.LogError("SpawnPointManager not found!");
-            }
+            //if (spawnPointManager != null)
+            //{
+            //    spawnPointManager.StartSpawning(this); // Kick off orb spawning
+            //}
+            //else
+            //{
+            //    Debug.LogError("SpawnPointManager not found!");
+            //}
 
             string anchorName = IsHost ? "CanvasAnchor_Host" : "CanvasAnchor_Client";
             canvasAnchorPoint = GameObject.Find(anchorName)?.transform;

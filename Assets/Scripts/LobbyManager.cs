@@ -14,9 +14,13 @@ public class LobbyManager : NetworkBehaviour
     public TextMeshPro gameStatusText;
     public TextMeshPro joinStatusText;
 
+    public GameObject hostSpawnPointManager;
+    public GameObject ClientSpawnPointManager;
+
+
     private bool gameStarted = false;
 
-    private void Start()
+    public void InitializeLobby()
     {
         // Show lobby UI only at start
         lobbyCanvas.SetActive(true);
@@ -26,12 +30,14 @@ public class LobbyManager : NetworkBehaviour
 
         // Show start button only if host
         startButton.gameObject.SetActive(NetworkManager.Singleton.IsHost);
-        startButton.onClick.AddListener(StartGame);
+        
 
         // Optional quit logic
         endButton.onClick.AddListener(QuitGame);
 
         gameStatusText.text = "Waiting for Host to Start...";
+
+        StartGame();
     }
 
     // TODO 
@@ -84,8 +90,25 @@ public class LobbyManager : NetworkBehaviour
             if (player.IsOwner)
             {
                 player.StartGameTimer();
-                player.spawnPointManager.StartSpawning(player);
+                if (player.IsHost)
+                {
+                    AssignSpawnPointManager(player, hostSpawnPointManager);
+
+                }
+                else
+                {
+
+                    AssignSpawnPointManager(player, ClientSpawnPointManager);
+                }
+                
             }
         }
+    }
+
+    private void AssignSpawnPointManager(NetworkPlayer player, GameObject spawnManager)
+    {
+        spawnManager.transform.SetParent(player.transform);
+        spawnManager.transform.position = player.transform.position;
+        player.GetComponentInChildren<SpawnPointManager>().StartSpawning(player);
     }
 }

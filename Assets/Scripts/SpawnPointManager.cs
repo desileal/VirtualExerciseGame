@@ -26,6 +26,7 @@ public class SpawnPointManager : NetworkBehaviour
         if (spawnPoints.Count == 0) return null;
 
         Transform point = spawnPoints[_currentIndex];
+        Debug.Log(point.transform.position);
         _currentIndex = (_currentIndex + 1) % spawnPoints.Count;
         if (_currentIndex == 0) _currentRep++;
         return point;
@@ -35,6 +36,7 @@ public class SpawnPointManager : NetworkBehaviour
     // use network object pool instead of reinstantiating
     public void SpawnNewOrb()
     {
+        Debug.Log("spawning orbs");
         if (_currentRep >= repetitions) return;
         
         Transform spawnPoint = GetNextSpawnPoint();
