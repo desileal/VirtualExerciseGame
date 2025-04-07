@@ -42,7 +42,7 @@ public class LobbyManager : NetworkBehaviour
     public void EndGameClientRpc()
     {
         lobbyCanvas.SetActive(true);
-        gameStatusText.text = "Game Over – Great work!";
+        gameStatusText.text = "Game Over ï¿½ Great work!";
         startButton.gameObject.SetActive(false);
         endButton.gameObject.SetActive(true);
     }
@@ -64,6 +64,7 @@ public class LobbyManager : NetworkBehaviour
 
     public void StartGame()
     {
+        Debug.Log("start button pressed");
         if (NetworkManager.Singleton.IsHost && !gameStarted)
         {
             gameStarted = true;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using TMPro;
+using Unity.XR.CoreUtils;
 
 
 public class NetworkPlayer : NetworkBehaviour
@@ -70,18 +71,25 @@ public class NetworkPlayer : NetworkBehaviour
 
             var audio = GetComponentInChildren<AudioListener>();
             if (audio != null) audio.enabled = false;
+            
+            var rig = GetComponentInChildren<XROrigin>();
+            if (rig != null) rig.gameObject.SetActive(false);
+            return;
 
             return;
         }
 
         if (IsOwner)
         {
-            var lobbyCam = GameObject.Find("LobbyCamera");
-            if (lobbyCam != null)
-            {
-                lobbyCam.SetActive(false);
-            }
-
+            // var lobbyCam = GameObject.Find("LobbyCamera");
+            // if (lobbyCam != null)
+            // {
+            //     lobbyCam.SetActive(false);
+            // }
+            
+            var xrOrigin = GetComponentInChildren<XROrigin>();
+            if (xrOrigin != null) xrOrigin.gameObject.SetActive(true);
+            
             Score.OnValueChanged += UpdateScoreUI;
             HeartRate.OnValueChanged += UpdateHeartRateUI;
             Calories.OnValueChanged += UpdateCaloriesUI;

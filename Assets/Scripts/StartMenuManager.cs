@@ -6,8 +6,12 @@ public class StartMenuManager : MonoBehaviour
 {
     public void StartHost()
     {
-        NetworkManager.Singleton.StartHost();
-        NetworkManager.Singleton.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+        var netMan = NetworkManager.Singleton;
+        if (netMan != null && !netMan.IsServer && !netMan.IsClient)
+        {
+            NetworkManager.Singleton.StartHost();
+            NetworkManager.Singleton.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+        }
     }
 
     public void StartClient()
